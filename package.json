@@ -1,7 +1,7 @@
 {
-  "name": "webpack-handlebars-static",
+  "name": "smooth-scroll-v2",
   "version": "1.0.0",
-  "description": "A webpack static site builder using handlebars templates, sass and babel.",
+  "description": "Tool for smooth scrolling and scroll based animations",
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=development webpack-dev-server --open",
@@ -11,7 +11,7 @@
     "clean": "rimraf build generated",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Mitch Heddles <mitchell.heddles@gmail.com>, edited by Léo Mouraire",
+  "author": "Léo Mouraire <leomouraire.com>, inspired by Locomotive Smooth Scroll",
   "license": "MIT",
   "browserslist": [
     "> 1%",

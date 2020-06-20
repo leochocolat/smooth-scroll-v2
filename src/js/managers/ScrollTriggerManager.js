@@ -56,6 +56,7 @@ class ScrollTriggerManager extends EventDispatcher {
             const element = elements[i];
             let top = element.getBoundingClientRect().top + ScrollManager.getPosition().y;
             const offset = element.dataset.scrollOffset ? parseInt(element.dataset.scrollOffset) : 0;
+            const offsetScreen = (element.dataset.scrollOffsetScreen ? parseFloat(element.dataset.scrollOffsetScreen) : 0) * this._windowHeight;
             let bottom = top + element.offsetHeight;
             const repeat = element.dataset.scrollRepeat;
             const call = element.dataset.scrollCall;
@@ -78,9 +79,9 @@ class ScrollTriggerManager extends EventDispatcher {
 
             const trigger = {
                 el: element,
-                top: top + offset,
-                bottom: bottom - offset,
-                offset: offset,
+                top: top + (offset + offsetScreen),
+                bottom: bottom - (offset + offsetScreen),
+                offset: offset + offsetScreen,
                 repeat: repeat,
                 call: call,
                 speed: speed,
