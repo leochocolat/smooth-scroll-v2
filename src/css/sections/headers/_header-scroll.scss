@@ -1,0 +1,60 @@
+.header-scroll {
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    width: 100%;
+
+    background-color: lightgray;
+    padding-top: 15px;
+
+    z-index: 1;
+}
+
+.header-scroll__content {
+    width: 100%;
+}
+
+.header-scroll__container {
+    position: relative;
+
+    width: 97%;
+
+    margin: auto;
+}
+
+.header-scroll__top-infos-list {
+    display: flex;
+    justify-content: space-between;
+
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.header-scroll__top-infos-list-item {
+    display: inline-block;
+
+    text-transform: uppercase;
+}
+
+.header-scroll__header {
+    display: block;
+    position: relative;
+
+    height: 70vh;
+    width: auto;
+
+}
+
+.header-scroll__heading {
+    position: absolute;
+    left: 0;
+    bottom: 80px;
+
+    margin: 0;
+
+    font-weight: 400;
+    font-size: 50px;
+    text-transform: uppercase;
+}

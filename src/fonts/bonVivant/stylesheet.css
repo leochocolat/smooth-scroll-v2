@@ -1,0 +1,20 @@
+@font-face {
+    font-family: 'Bon Vivant';
+    src: url('BonVivant-Regular.woff2') format('woff2'),
+        url('BonVivant-Regular.woff') format('woff'),
+        url('BonVivant-Regular.ttf') format('truetype'),
+        url('BonVivant-Regular.svg#BonVivant-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Bon Vivant Serif';
+    src: url('BonVivantSerif.woff2') format('woff2'),
+        url('BonVivantSerif.woff') format('woff'),
+        url('BonVivantSerif.ttf') format('truetype'),
+        url('BonVivantSerif.svg#BonVivantSerif') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+

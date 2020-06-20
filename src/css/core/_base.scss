@@ -1,0 +1,13 @@
+html {
+    &.hasSmoothScroll {
+        overflow-y: scroll;
+        overscroll-behavior-y: none;
+    }
+}
+
+body {
+    display: block;
+    margin: 0;
+
+    background-color: lightgray;
+}
