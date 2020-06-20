@@ -2,10 +2,9 @@
 
 Built with:
 
-* Handlebars
-* SASS
-* Babel
 * Webpack
+* Babel
+* GSAP
 
 ### Commands
 
@@ -15,4 +14,8 @@ npm install
 
 ```bash
 npm start
+```
+
+```bash
+npm build
 ```
