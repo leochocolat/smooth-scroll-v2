@@ -55,6 +55,23 @@
     margin: 0;
 
     font-weight: 400;
-    font-size: 50px;
+    font-size: rem(50px);
     text-transform: uppercase;
+}
+
+
+@include mq-extra-narrow {
+    .header-scroll__top-infos-list {
+        font-size: rem(12px);
+    }
+
+    .header-scroll__heading {
+        bottom: 40px;
+
+        font-size: rem(30px);
+    }
+
+    .header-scroll__top-infos-list-item {
+        margin-right: 15px;
+    }
 }

@@ -4,11 +4,10 @@ import ResizeManager from './ResizeManager';
 
 import bindAll from '../utils/bindAll';
 import lerp from '../utils/lerp';
-import { TweenLite } from 'gsap';
+import transform from '../utils/transform';
 
 //TODO : 
 //ADD STICKY OPTION
-//CHECK IF PARALLAX IS FIXED
 
 class ScrollTriggerManager extends EventDispatcher {
     constructor(options) {
@@ -28,6 +27,9 @@ class ScrollTriggerManager extends EventDispatcher {
      */
     start(options) {
         this.el = options.el;
+        this.className = options.className;
+
+        this._resize();
         this._setupTriggers();
         this._setupEventListeners();
     }
@@ -35,14 +37,12 @@ class ScrollTriggerManager extends EventDispatcher {
     setContentHeight(height) {
         this._contentHeight = height;
         this._updateElements();
-
         this._detectElements();
     }
 
     removeEventListeners() {
         ScrollManager.removeEventListeners('scroll', this._scrollHandler);
         ScrollManager.removeEventListeners('scroll:end', this._scrollEndHandler);
-
         ResizeManager.removeEventListeners('resize:end', this._resizeEndHandler);
     }
 
@@ -54,7 +54,6 @@ class ScrollTriggerManager extends EventDispatcher {
 
         for (let i = 0; i < elements.length; i++) {
             const element = elements[i];
-            const className = element.dataset.scrollClass;//not used for now
             let top = element.getBoundingClientRect().top + ScrollManager.getPosition().y;
             const offset = element.dataset.scrollOffset ? parseInt(element.dataset.scrollOffset) : 0;
             let bottom = top + element.offsetHeight;
@@ -79,7 +78,6 @@ class ScrollTriggerManager extends EventDispatcher {
 
             const trigger = {
                 el: element,
-                class: className,
                 top: top + offset,
                 bottom: bottom - offset,
                 offset: offset,
@@ -126,8 +124,8 @@ class ScrollTriggerManager extends EventDispatcher {
         if (!element.inView) return;
 
         const scrollTop = ScrollManager.getPosition().y;
-        const scrollMiddle = scrollTop + window.innerHeight/2;
-        const scrollBottom = scrollTop + window.innerHeight;
+        const scrollMiddle = scrollTop + this._windowMiddle;
+        const scrollBottom = scrollTop + this._windowHeight;
         const middle = element.top + (element.bottom - element.top);
 
         let transformDistance;
@@ -138,11 +136,11 @@ class ScrollTriggerManager extends EventDispatcher {
             break;
 
             case 'elementTop':
-                transformDistance = (scrollBottom - element.top) * -element.speed;
+                transformDistance = (scrollBottom - element.top) * - element.speed;
             break;
 
             case 'bottom':
-                transformDistance = (this._contentHeight - scrollBottom + this.windowHeight) * element.speed;
+                transformDistance = (this._contentHeight - scrollBottom + this._windowHeight) * element.speed;
             break;
 
             default:
@@ -153,26 +151,25 @@ class ScrollTriggerManager extends EventDispatcher {
 
         if (element.delay) {
             let start = this._getTransform(element.el);
-            const lerpY = lerp(start.y, transformDistance, element.delay);
+            const lerpY = lerp(start.y, transformDistance, element.delay).toFixed(2);
 
             if (element.direction === 'horizontal') {
-                TweenLite.set(element.el, { x: lerpY });
+                transform(element.el, { x: lerpY, y: 0 });
             } else {
-                TweenLite.set(element.el, { y: lerpY });
+                transform(element.el, { x: 0, y: lerpY });
             }
         } else {
             if (element.direction === 'horizontal') {
-                TweenLite.set(element.el, { x: transformDistance });
+                transform(element.el, { x: transformDistance, y: 0 });
             } else {
-                TweenLite.set(element.el, { y: transformDistance });
+                transform(element.el, { x: 0, y: transformDistance });
             }
         }
-
     }
 
     _setInView(trigger) {
         trigger.inView = true;
-        trigger.el.classList.add('isInView');
+        trigger.el.classList.add(this.className);
 
         if (trigger.call) {
             this._dispatchCallEvent(trigger, 'enter');
@@ -191,7 +188,7 @@ class ScrollTriggerManager extends EventDispatcher {
         }
         
         if (trigger.repeat) {
-            trigger.el.classList.remove('isInView');
+            trigger.el.classList.remove(this.className);
         }
     }
 
@@ -203,6 +200,11 @@ class ScrollTriggerManager extends EventDispatcher {
         }
 
         this.dispatchEvent('call', payload);
+    }
+
+    _resize() {
+        this._windowHeight = window.innerHeight;
+        this._windowMiddle = this._windowHeight / 2;
     }
 
     _updateElements() {
@@ -249,6 +251,7 @@ class ScrollTriggerManager extends EventDispatcher {
     }
 
     _resizeEndHandler() {
+        this._resize()
         this._updateElements();
     }
 }

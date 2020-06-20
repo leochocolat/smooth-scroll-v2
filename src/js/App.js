@@ -1,18 +1,22 @@
 import ComponentFactory from './ComponentFactory';
 import ScrollModule from './modules/ScrollModule';
+import { gsap } from 'gsap';
+import bindAll from './utils/bindAll';
 
 class App {
     constructor() {
+        bindAll(this, '_update');
+
         this._setup();
     }
 
     _setup() {
         this._setupSmoothScroll();
-        this._update();
+        gsap.ticker.add(this._update);
     }
 
     _setupSmoothScroll() {
-        this._smoothScrollModule = new ScrollModule({
+        this._scrollModule = new ScrollModule({
             container: document.querySelector('.js-scroll-container'),
             content: document.querySelector('.js-scroll-content'),
             smooth: true,
@@ -26,9 +30,7 @@ class App {
 
     _update() {
         ComponentFactory.update();
-        this._smoothScrollModule.update();
-
-        requestAnimationFrame(this._update.bind(this));
+        this._scrollModule.update();
     }
 }
 

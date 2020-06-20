@@ -1,14 +1,14 @@
 {{#extend "html/template"}}
   {{#content "body"}}
 
-  
-  <main role="main" data-barba="container" data-barba-namespace="home" class="js-scroll-container">
-    <div class="js-scroll-content">
-      {{> partials/header }}
-      {{> partials/footer }}
-    </div>
-  </main>
-
-
+    
+<main role="main" class="page-scroll-demo js-scroll-container">
+    <div class="js-scroll-content page-scroll-demo__content">
+        {{> headers/header-scroll }}
+        {{> sections/section-scroll-image }}
+        {{> sections/section-scroll-smooth }}
+    </div>    
+</main>
+    
   {{/content}}
 {{/extend}}

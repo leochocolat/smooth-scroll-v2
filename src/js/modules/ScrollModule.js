@@ -1,10 +1,13 @@
 import bindAll from '../utils/bindAll';
+import transform from '../utils/transform';
 
 import ScrollManager from '../managers/ScrollManager';
 import ScrollTriggerManager from '../managers/ScrollTriggerManager';
 import ResizeManager from '../managers/ResizeManager';
 
-import { TweenLite, Power2, Power3, TimelineLite } from 'gsap';
+import { TweenLite } from 'gsap';
+
+const HEIGHT_CHECK_INTERVAL = 2000;
 
 class ScrollModule {
     constructor(options) {
@@ -21,14 +24,18 @@ class ScrollModule {
         this.content = options.content;
         this.smooth = options.smooth;
         this.smoothValue = options.smoothValue;
+        this.className = options.className;
 
         this._scroll = {};
         this._previousScroll = {};
-        this._offsetY = 0;
+
+        this.ui = {
+            scrollTo: document.querySelectorAll('[data-scroll-to]')
+        }
 
         setInterval(() => {
             this._allowContentHeightCheck = true;
-        }, 2000);
+        }, HEIGHT_CHECK_INTERVAL);
 
         this._setup();
     }
@@ -50,15 +57,32 @@ class ScrollModule {
     * Private
     */
     _setup() {
+        ScrollManager.start();
+
         if (this.smooth) {
             ScrollManager.enableSmoothScroll();
             ScrollManager.setSmoothValue(this.smoothValue);
         }
         
         this._setupEventListeners();
+        this._setupScrollTo();
         this._setStyleProps();
         this._resize();
-        ScrollTriggerManager.start({ el: this.container });
+        
+        ScrollTriggerManager.start({
+            el: this.container,
+            className: this.className ? this.className : 'is-in-view'
+        });
+    }
+
+    _setupScrollTo() {
+        for (let i = 0; i < this.ui.scrollTo.length; i++) {
+            this.ui.scrollTo[i].addEventListener('click', () => {
+                const target = this.ui.scrollTo[i].dataset.scrollTo;
+                const offset = this.ui.scrollTo[i].dataset.scrollToOffset;
+                ScrollManager.scrollTo(target, offset);
+            });
+        }
     }
 
     _setStyleProps() {
@@ -82,9 +106,11 @@ class ScrollModule {
 
     _setOffset() {
         const position = ScrollManager.getPosition();
-        const y = this._offsetY + - position.y;
+        const y = - position.y;
+        const x = - position.x;
 
-        TweenLite.set(this.content, { y: y });
+        transform(this.content, { x: x, y: y });
+        // TweenLite.set(this.content, { y: y, force3D: true });
     }
 
     _checkContentHeight() {
@@ -134,14 +160,6 @@ class ScrollModule {
     }
 
     _callHandler(e) {
-        //EXAMPLE
-        console.log('call', e);
-
-        if (e.name === "stairs") {
-            let tl = new TimelineLite();
-            tl.staggerFromTo(e.el.querySelectorAll('span'), 1, { y: '100%' }, { y: '0%' }, 0.1);
-        }
-
     }
 
     _readyStateChangeHandler() {

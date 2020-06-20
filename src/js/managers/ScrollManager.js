@@ -3,7 +3,7 @@ import EventDispatcher from '../events/EventDispatcher';
 import bindAll from '../utils/bindAll';
 import DeviceUtils from '../utils/DeviceUtils';
 import lerp from '../utils/lerp';
-import TweenLite from 'gsap';
+import { gsap } from 'gsap';
 
 const SMOOTH = 0.15;
 const THROTTLE_VALUE = 300;
@@ -29,13 +29,17 @@ class ScrollManager extends EventDispatcher {
     }
 
     _setup() {
-        this._updateValues();
-        this._setupEventListeners();
+        //nothing
     }
 
     /**
     * Public
     */
+    start() {
+        this._updateValues();
+        this._setupEventListeners();
+    }
+
     enable() {
         if (document.body.classList.contains('isScrollEnable')) return;
         document.body.classList.add('isScrollEnable');
@@ -56,7 +60,7 @@ class ScrollManager extends EventDispatcher {
 
     disableSmoothScroll() {
         this._isSmoothScrollEnabled = false;
-        TweenLite.ticker.removeEventListener('tick', this._tickHandler);
+        gsap.ticker.remove(this._tickHandler);
     }
 
     setSmoothValue(value) {
@@ -75,6 +79,7 @@ class ScrollManager extends EventDispatcher {
         return this._scrollheight;
     }
 
+    //todo make it work on safari
     scrollTo(target, offset) {
         const offsetValue = offset || 0;
         let scrollDestination;
@@ -154,7 +159,7 @@ class ScrollManager extends EventDispatcher {
         this._smoothScrollPosition.x = this._scrollPosition.x;
         this._smoothScrollPosition.y = this._scrollPosition.y;
 
-        TweenLite.ticker.addEventListener('tick', this._tickHandler);
+        gsap.ticker.add(this._tickHandler);
     }
 
     _tick() {
@@ -164,9 +169,10 @@ class ScrollManager extends EventDispatcher {
         this._smoothScrollPosition.x = Math.round(x * 100) / 100;
         this._smoothScrollPosition.y = Math.round(y * 100) / 100;
 
+        this._smoothDeltaY = this._previousSmoothScrollPositionX - this._smoothScrollPosition.x;
         this._smoothDeltaY = this._previousSmoothScrollPositionY - this._smoothScrollPosition.y;
 
-        if (this._smoothDeltaY !== 0) {
+        if (this._smoothDeltaY !== 0 || this._smoothDeltaX !== 0) {
             this._smoothScrollHandler();
         }
 
@@ -203,8 +209,11 @@ class ScrollManager extends EventDispatcher {
             target: this, 
             x: this._smoothScrollPosition.x, 
             y: this._smoothScrollPosition.y, 
-            delta: this._smoothDeltaY, 
-            direction: this._smoothDeltaY > 0 ? 'up' : 'down'  
+            delta: { x: this._smoothDeltaX, y: this._smoothDeltaY }, 
+            direction: {
+                x: this._smoothDeltaX > 0 ? 'left' : 'right',
+                y: this._smoothDeltaY > 0 ? 'up' : 'down'
+            }
         });
 
         clearTimeout(this._smoothScrollTimeout);
