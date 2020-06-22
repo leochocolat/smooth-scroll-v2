@@ -1,25 +1,50 @@
 .section-scroll-smooth {
     position: relative;
-    height: 200vh;
+    height: 100vh;
 }
 
-// .section-scroll-smooth__container {
-//     position: relative;
+.section-scroll-smooth__container {
+    position: relative;
 
-//     width: 97%;
+    width: 97%;
+    height: 100%;
 
-//     margin: auto;
-// }
+    margin: auto;
+}
 
-// .section-scroll-smooth__image-container {
-//     position: absolute;
-//     right: 50%;
-//     top: 0;
+.section-scroll-smooth__title {
+    position: absolute;
+    left: 0;
+    top: 40%;
 
-//     width: 40%;
-// }
+    width: 100%;
 
-// .section-scroll-smooth__image {
-//     width: 100%;
-//     height: auto;
-// }
+    font-size: rem(80px);
+    line-height: rem(80px);
+    text-transform: uppercase;
+    color: black;
+
+    text-align: center;
+
+    .mask {
+        overflow: hidden;
+    }
+
+    .animated {
+        transform: translateY(100%);
+        will-change: transform;
+        transition: transform 1.5s $Power3Out;
+    }
+
+    @for $i from 1 to 10 {
+        .animated--#{$i} {
+            transition-delay: #{$i * 0.1}s;
+        }
+    }
+
+    &.is-in-view {
+        .animated {
+            transform: translateY(0);
+        }
+    }
+}

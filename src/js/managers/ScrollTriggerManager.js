@@ -5,6 +5,7 @@ import ResizeManager from './ResizeManager';
 import bindAll from '../utils/bindAll';
 import lerp from '../utils/lerp';
 import transform from '../utils/transform';
+import DeviceUtils from '../utils/DeviceUtils';
 
 //TODO : 
 //ADD STICKY OPTION
@@ -19,6 +20,7 @@ class ScrollTriggerManager extends EventDispatcher {
             '_resizeEndHandler'
         );
 
+        this.sections = [];
         this.triggers = [];
     }
     
@@ -28,8 +30,10 @@ class ScrollTriggerManager extends EventDispatcher {
     start(options) {
         this.el = options.el;
         this.className = options.className;
+        this.smooth = options.smooth;
 
         this._resize();
+        this._setupSections();
         this._setupTriggers();
         this._setupEventListeners();
     }
@@ -49,6 +53,55 @@ class ScrollTriggerManager extends EventDispatcher {
     /**
     * Private
     */
+    _setupSections() {
+        const sections = this.el.querySelectorAll('[data-scroll-section]');
+
+        for (let i = 0; i < sections.length; i++) {
+            const element = sections[i];
+
+            let top = element.getBoundingClientRect().top + ScrollManager.getPosition().y;
+            let bottom = top + element.offsetHeight;
+
+            const section = {
+                el: element,
+                top: top,
+                bottom: bottom,
+                inView: false
+            }
+
+            this.sections.push(section);
+        }
+    }
+
+    _detectSections() {
+        const scrollTop = ScrollManager.getPosition().y;
+        const scrollBottom = scrollTop + this._windowHeight;
+
+        for (let i = 0; i < this.sections.length; i++) {
+            const element = this.sections[i];
+
+            if (!element.inView) {
+                if ((scrollBottom >= element.top) && (scrollTop < element.bottom)) {
+                    //set in view
+                    element.inView = true;
+                    element.el.style.visibility = 'visible';
+                    element.el.style.pointerEvents = 'all';
+                    element.el.style.opacity = 1;
+                }
+            }
+
+            if (element.inView) {
+                if ((scrollBottom < element.top) || (scrollTop > element.bottom)) {
+                    //set out of view
+                    element.inView = false;
+                    element.el.style.visibility = 'hidden';
+                    element.el.style.pointerEvents = 'none';
+                    element.el.style.opacity = 0;
+                }
+            }
+        }
+    }
+
     _setupTriggers() {
         const elements = this.el.querySelectorAll('[data-scroll]');
 
@@ -61,10 +114,12 @@ class ScrollTriggerManager extends EventDispatcher {
             const repeat = element.dataset.scrollRepeat;
             const call = element.dataset.scrollCall;
             const speed = element.dataset.scrollSpeed ? parseFloat(element.dataset.scrollSpeed) : undefined;
+            const forceParallax = element.dataset.scrollForceParallax;
             const delay = element.dataset.scrollDelay ? parseFloat(element.dataset.scrollDelay) : undefined;
             const direction = element.dataset.scrollDirection || 'vertical';
             const target = element.dataset.scrollTarget;
             const position = element.dataset.scrollPosition;
+
 
             let targetEl;
             if (target) {
@@ -85,6 +140,7 @@ class ScrollTriggerManager extends EventDispatcher {
                 repeat: repeat,
                 call: call,
                 speed: speed,
+                forceParallax: forceParallax,
                 delay: delay,
                 direction: direction,
                 target: targetEl,
@@ -98,7 +154,7 @@ class ScrollTriggerManager extends EventDispatcher {
 
     _detectElements() {
         const scrollTop = ScrollManager.getPosition().y;
-        const scrollBottom = scrollTop + window.innerHeight;
+        const scrollBottom = scrollTop + this._windowHeight;
 
         for (let i = 0; i < this.triggers.length; i++) {
             const element = this.triggers[i];
@@ -116,6 +172,7 @@ class ScrollTriggerManager extends EventDispatcher {
             }
             
             if (element.speed) {
+                if ((!this.smooth || DeviceUtils.isTouch()) && !element.forceParallax) continue;
                 this._transformElement(element);
             }
         }
@@ -244,6 +301,7 @@ class ScrollTriggerManager extends EventDispatcher {
     }
 
     _scrollHandler() {
+        this._detectSections();
         this._detectElements();
     }
 

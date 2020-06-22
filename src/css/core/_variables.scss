@@ -1,1 +1,16 @@
 $base-font-size: 16px;
+
+/**
+ * Easing
+ */
+$Power1In: cubic-bezier(0.12, 0, 0.39, 0);
+$Power2In: cubic-bezier(0.32, 0, 0.67, 0);
+$Power3In: cubic-bezier(0.64, 0, 0.78, 0);
+
+$Power1Out: cubic-bezier(0.61, 1, 0.88, 1);
+$Power2Out: cubic-bezier(0.33, 1, 0.68, 1);
+$Power3Out: cubic-bezier(0.22, 1, 0.36, 1);
+
+$Power1InOut: cubic-bezier(0.37, 0, 0.63, 1);
+$Power2InOut: cubic-bezier(0.65, 0, 0.35, 1);
+$Power3InOut: cubic-bezier(0.83, 0, 0.17, 1);

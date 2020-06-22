@@ -19,3 +19,8 @@ npm start
 ```bash
 npm build
 ```
+
+### Todo 
+
+* Write documentation
+* Improve mobile support

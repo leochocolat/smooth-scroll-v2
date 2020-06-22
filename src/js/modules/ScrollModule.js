@@ -1,11 +1,10 @@
 import bindAll from '../utils/bindAll';
+import DeviceUtils from '../utils/DeviceUtils';
 import transform from '../utils/transform';
 
 import ScrollManager from '../managers/ScrollManager';
 import ScrollTriggerManager from '../managers/ScrollTriggerManager';
 import ResizeManager from '../managers/ResizeManager';
-
-import { TweenLite } from 'gsap';
 
 const HEIGHT_CHECK_INTERVAL = 2000;
 
@@ -68,10 +67,11 @@ class ScrollModule {
         this._setupScrollTo();
         this._setStyleProps();
         this._resize();
-        
+
         ScrollTriggerManager.start({
             el: this.container,
-            className: this.className ? this.className : 'is-in-view'
+            className: this.className ? this.className : 'is-in-view',
+            smooth: this.smooth
         });
     }
 
@@ -86,6 +86,8 @@ class ScrollModule {
     }
 
     _setStyleProps() {
+        if (!this.smooth || DeviceUtils.isTouch()) return;
+
         document.querySelector('html').classList.add('hasSmoothScroll');
         
         this.content.style.willChange = 'transform';
@@ -105,12 +107,13 @@ class ScrollModule {
     }
 
     _setOffset() {
+        if (!this.smooth || DeviceUtils.isTouch()) return;
+
         const position = ScrollManager.getPosition();
         const y = - position.y;
         const x = - position.x;
 
         transform(this.content, { x: x, y: y });
-        // TweenLite.set(this.content, { y: y, force3D: true });
     }
 
     _checkContentHeight() {
