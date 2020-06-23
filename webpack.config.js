@@ -11,7 +11,7 @@ const cssnano = require('cssnano');
 const { makeDataReplacements, registerHandlersHelpers } = require('./webpack.helpers.js');
 
 const mode = process.env.NODE_ENV || 'production';
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3002;
 
 const sourceDir = path.join(__dirname, 'src');
 const templateDir = path.join(__dirname, 'generated');

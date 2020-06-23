@@ -20,7 +20,7 @@ class App {
             container: document.querySelector('.js-scroll-container'),
             content: document.querySelector('.js-scroll-content'),
             smooth: true,
-            smoothValue: 0.15
+            smoothValue: 0.15,
         });
     }
 

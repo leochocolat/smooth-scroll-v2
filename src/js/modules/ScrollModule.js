@@ -1,6 +1,7 @@
 import bindAll from '../utils/bindAll';
 import DeviceUtils from '../utils/DeviceUtils';
 import transform from '../utils/transform';
+import defaults from '../options/defaults';
 
 import ScrollManager from '../managers/ScrollManager';
 import ScrollTriggerManager from '../managers/ScrollTriggerManager';
@@ -9,7 +10,7 @@ import ResizeManager from '../managers/ResizeManager';
 const HEIGHT_CHECK_INTERVAL = 2000;
 
 class ScrollModule {
-    constructor(options) {
+    constructor(options = {}) {
         bindAll(
             this,
             '_scrollHandler',
@@ -19,11 +20,17 @@ class ScrollModule {
             '_callHandler'
         );
 
-        this.container = options.container;
-        this.content = options.content;
-        this.smooth = options.smooth;
-        this.smoothValue = options.smoothValue;
-        this.className = options.className;
+        this.options = {
+            ...defaults,
+            ...options,
+        };
+
+        this.container = this.options.container;
+        this.content = this.options.content;
+        this.smoothClass = this.options.smoothClass;
+        this.scrollEnableClass = this.options.scrollEnableClass;
+        this.smooth = this.options.smooth;
+        this.class = this.options.class;
 
         this._scroll = {};
         this._previousScroll = {};
@@ -56,12 +63,7 @@ class ScrollModule {
     * Private
     */
     _setup() {
-        ScrollManager.start();
-
-        if (this.smooth) {
-            ScrollManager.enableSmoothScroll();
-            ScrollManager.setSmoothValue(this.smoothValue);
-        }
+        ScrollManager.start(this.options);
         
         this._setupEventListeners();
         this._setupScrollTo();
@@ -70,8 +72,8 @@ class ScrollModule {
 
         ScrollTriggerManager.start({
             el: this.container,
-            className: this.className ? this.className : 'is-in-view',
-            smooth: this.smooth
+            class: this.class ? this.class : 'is-in-view',
+            smooth: this.smooth,
         });
     }
 
@@ -88,7 +90,7 @@ class ScrollModule {
     _setStyleProps() {
         if (!this.smooth || DeviceUtils.isTouch()) return;
 
-        document.querySelector('html').classList.add('hasSmoothScroll');
+        document.querySelector('html').classList.add(this.smoothClass);
         
         this.content.style.willChange = 'transform';
         this.content.style.position = 'fixed';

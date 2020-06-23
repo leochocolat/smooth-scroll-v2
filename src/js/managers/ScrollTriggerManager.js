@@ -29,7 +29,7 @@ class ScrollTriggerManager extends EventDispatcher {
      */
     start(options) {
         this.el = options.el;
-        this.className = options.className;
+        this.class = options.class;
         this.smooth = options.smooth;
 
         this._resize();
@@ -227,7 +227,7 @@ class ScrollTriggerManager extends EventDispatcher {
 
     _setInView(trigger) {
         trigger.inView = true;
-        trigger.el.classList.add(this.className);
+        trigger.el.classList.add(this.class);
 
         if (trigger.call) {
             this._dispatchCallEvent(trigger, 'enter');
@@ -246,7 +246,7 @@ class ScrollTriggerManager extends EventDispatcher {
         }
         
         if (trigger.repeat) {
-            trigger.el.classList.remove(this.className);
+            trigger.el.classList.remove(this.class);
         }
     }
 

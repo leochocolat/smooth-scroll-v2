@@ -19,6 +19,8 @@ class ScrollManager extends EventDispatcher {
             '_scrollEndHandler'
         );
 
+        this.options = {};
+
         this._scrollPosition = { x: 0, y: 0 };
         this._smoothScrollPosition = { x: 0, y: 0 };
         this._isSmoothScrollEnabled = false;
@@ -35,18 +37,26 @@ class ScrollManager extends EventDispatcher {
     /**
     * Public
     */
-    start() {
+    start(options) {
+        this.options = options;
+
+        this._smoothScrollLerpFactor = this.options.smoothValue;
+
+        if(this.options.smooth) {
+            this.enableSmoothScroll();
+        }
+
         this._updateValues();
         this._setupEventListeners();
     }
 
     enable() {
-        if (document.body.classList.contains('isScrollEnable')) return;
-        document.body.classList.add('isScrollEnable');
+        if (document.body.classList.contains(this.options.scrollEnableClass)) return;
+        document.body.classList.add(this.options.scrollEnableClass);
     }
 
     disable() {
-        document.body.classList.remove('isScrollEnable');
+        document.body.classList.remove(this.options.scrollEnableClass);
     }
 
     enableSmoothScroll() {
@@ -64,7 +74,7 @@ class ScrollManager extends EventDispatcher {
     }
 
     setSmoothValue(value) {
-        this._smoothScrollLerpFactor = value || SMOOTH;
+        this._smoothScrollLerpFactor = value;
     }
 
     getDelta() {
@@ -200,7 +210,7 @@ class ScrollManager extends EventDispatcher {
             });
 
             clearTimeout(this._scrollTimeout);
-            this._scrollTimeout = setTimeout(this._scrollEndHandler, THROTTLE_VALUE);
+            this._scrollTimeout = setTimeout(this._scrollEndHandler, this.options.throttleValue);
         }
     }
 
@@ -217,7 +227,7 @@ class ScrollManager extends EventDispatcher {
         });
 
         clearTimeout(this._smoothScrollTimeout);
-        this._smoothScrollTimeout = setTimeout(this._scrollEndHandler, THROTTLE_VALUE);
+        this._smoothScrollTimeout = setTimeout(this._scrollEndHandler, this.options.throttleValue);
     }
 
     _scrollEndHandler() {
