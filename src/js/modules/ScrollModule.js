@@ -22,7 +22,7 @@ class ScrollModule {
 
         this.options = {
             ...defaults,
-            ...options,
+            ...options
         };
 
         this.container = this.options.container;

@@ -5,8 +5,8 @@ import DeviceUtils from '../utils/DeviceUtils';
 import lerp from '../utils/lerp';
 import { gsap } from 'gsap';
 
-const SMOOTH = 0.15;
-const THROTTLE_VALUE = 300;
+import defaults from '../options/defaults';
+
 
 class ScrollManager extends EventDispatcher {
     constructor(options = {}) {
@@ -19,13 +19,14 @@ class ScrollManager extends EventDispatcher {
             '_scrollEndHandler'
         );
 
-        this.options = {};
+        this.options = defaults;
 
         this._scrollPosition = { x: 0, y: 0 };
         this._smoothScrollPosition = { x: 0, y: 0 };
         this._isSmoothScrollEnabled = false;
-        this._smoothScrollLerpFactor = SMOOTH;
         this._scrollDelta = 0;
+
+        this._smoothScrollLerpFactor = this.options.smoothValue;
 
         this._setup();
     }

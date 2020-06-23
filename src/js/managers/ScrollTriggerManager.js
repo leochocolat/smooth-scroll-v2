@@ -7,6 +7,8 @@ import lerp from '../utils/lerp';
 import transform from '../utils/transform';
 import DeviceUtils from '../utils/DeviceUtils';
 
+import defaults from '../options/defaults';
+
 //TODO : 
 //ADD STICKY OPTION
 
@@ -22,6 +24,10 @@ class ScrollTriggerManager extends EventDispatcher {
 
         this.sections = [];
         this.triggers = [];
+
+        this.el = defaults.el;
+        this.class = defaults.class;
+        this.smooth = defaults.smooth;
     }
     
     /**
