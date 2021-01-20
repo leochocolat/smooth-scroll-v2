@@ -19,7 +19,7 @@
     "IE 10"
   ],
   "dependencies": {
-    "gsap": "^3.3.3"
+    "gsap": "^3.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.10.3",
