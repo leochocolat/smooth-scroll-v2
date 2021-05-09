@@ -29,7 +29,7 @@
     "css-loader": "^3.6.0",
     "cssnano": "^4.1.10",
     "file-loader": "^4.3.0",
-    "handlebars": "^4.7.6",
+    "handlebars": "^4.7.7",
     "handlebars-layouts": "^3.1.4",
     "handlebars-webpack-plugin": "git+https://github.com/mitchheddles/handlebars-webpack-plugin.git#478592b",
     "html-webpack-plugin": "^3.2.0",
