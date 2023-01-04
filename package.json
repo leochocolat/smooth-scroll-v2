@@ -32,7 +32,7 @@
     "handlebars": "^4.7.6",
     "handlebars-layouts": "^3.1.4",
     "handlebars-webpack-plugin": "git+https://github.com/mitchheddles/handlebars-webpack-plugin.git#478592b",
-    "html-webpack-plugin": "^3.2.0",
+    "html-webpack-plugin": "^5.5.0",
     "ignore-loader": "^0.1.2",
     "imagemin-webpack-plugin": "^2.4.2",
     "mini-css-extract-plugin": "^0.8.2",
